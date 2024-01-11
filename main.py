@@ -1,7 +1,9 @@
 from flask import Flask, jsonify, request, Response
 from flask_caching import Cache
 import json
-import datetime
+from api.check_user_input import check_user_input
+
+
 
 from data_base.session import create_session, global_init
 
@@ -38,11 +40,20 @@ def calculate_squares():
     if not request.is_json:
         return jsonify({'error': 'Invalid JSON'}), 400
 
-    input_json = request.get_json()
 
-    answer_json = calculate_academy_credit(input_json["direction_name"],
-                                           input_json["semestr"],
-                                           input_json["diciplines"])
+    input_json = request.get_json()
+    try:
+        check_user_input(input_json)
+    except (ValueError, KeyError) as e:
+        return Response(json.dumps({'error': f"Invalid JSON include ({e})"},
+                                   ensure_ascii=False),
+                        status=400, content_type='application/json; charset=utf-8')
+    try:
+        answer_json = calculate_academy_credit(input_json["direction_name"], input_json["semestr"], input_json["diciplines"])
+    except ValueError as e:
+        return Response(json.dumps({'error': f"Invalid JSON include ({e})"},
+                                   ensure_ascii=False),
+                        status=400, content_type='application/json; charset=utf-8')
 
     return Response(json.dumps(answer_json, ensure_ascii=False),
                     status=200, content_type='application/json; charset=utf-8')

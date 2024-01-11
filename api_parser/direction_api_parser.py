@@ -12,8 +12,8 @@ if __name__ == "__main__":
     from data_base.models.institute import Institute
     from data_base.models.employee import Employee
 
-
     ALL_PROGRAMMS_URL = "https://upop-api.my1.urfu.ru/programs"
+
 
     def prepare_chair(chair: dict, db_sess: Session) -> Chair:
         if chair is None:
@@ -29,6 +29,7 @@ if __name__ == "__main__":
         new_chair.title = chair["title"]
         return new_chair
 
+
     def prepare_institute(institute: dict, db_sess: Session) -> Institute:
         if institute is None:
             return None
@@ -42,6 +43,7 @@ if __name__ == "__main__":
         new_institute.uuid = institute["uuid"]
         new_institute.title = institute["title"]
         return new_institute
+
 
     def prepare_employee(employee: dict, db_sess: Session) -> Employee:
         if employee is None:
